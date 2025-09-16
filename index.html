@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Atma-Bodha — Your Mental Wellness Companion</title>
+
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Lucide Icons for a modern icon set -->
+  <script src="https://unpkg.com/lucide@0.378.0/dist/umd/lucide.min.js"></script>
+
+  <!-- Google Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1:#1a1a2e;
+      --bg2:#16213e;
+      --bg3:#0f3460;
+      --primary:#22d3ee;
+      --secondary:#f472b6;
+      --accent:#eab308;
+      --card-bg: rgba(30, 41, 59, 0.6); 
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: rgba(0, 0, 0, 0.25);
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+      --success:#4ade80;
+      --danger:#f87171;
+    }
+
+    html { scroll-behavior: smooth; }
+    *{box-sizing:border-box}
+
+    body{
+      margin:0; 
+      font-family: 'Inter', sans-serif;
+      color: var(--text-light);
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+      background-attachment: fixed;
+      -webkit-font-smoothing:antialiased; 
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      overflow-x: hidden;
+    }
+    
+    .particles {
+      position: fixed; top: 0; left: 0; width: 100%;
+      height: 100%; overflow: hidden; z-index: -1;
+    }
+    .particle {
+      position: absolute; width: 4px; height: 4px;
+      background: var(--primary); border-radius: 50%;
+      opacity: 0.6; animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in-section {
+      opacity: 0;
+      animation: fadeIn 0.8s forwards;
+      animation-delay: 0.2s;
+    }
+
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px; padding: 16px 0;}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:52px; height:52px; border-radius:12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display:flex;align-items:center;justify-content:center;
+    }
+    .title { font-size:1.25rem; font-weight:700; }
+    .subtitle { font-size:0.9rem; color: var(--text-muted); }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .hero{
+      margin-top:24px; display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:24px; align-items:start;
+    }
+    
+    .hero-left h1{margin:0;font-size:2.5rem; line-height: 1.2;}
+    .hero-left p{margin-top:12px; color:var(--text-muted); font-size: 1.1rem;}
+    .hero-cta { display:flex; gap:12px; margin-top:24px; align-items:center }
+
+    .card{
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; box-shadow: 0 8px 32px var(--card-shadow);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 24px; transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px var(--card-shadow);
+    }
+
+    h3{margin:0 0 12px 0; font-size: 1.5rem;}
+    .muted { color: var(--text-muted); font-size:1rem }
+
+    .btn { 
+      padding:12px 20px; border-radius:12px; border:none; font-weight:600; cursor:pointer; 
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s ease; font-size: 1rem;
+    }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .btn-primary { background:linear-gradient(90deg, var(--primary), var(--secondary)); color: var(--bg1); }
+    .btn-outline { background:transparent; border:1px solid var(--card-border); color:var(--text-light); }
+    .btn-outline:hover { background: var(--card-border); }
+
+    .hero-right{position:sticky; top:24px;}
+    .features{display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-top:24px}
+    
+    label{display:block;font-size:0.9rem;margin-bottom:8px;color:var(--text-muted); font-weight: 500;}
+    input, textarea, select{
+      width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--card-border);
+      background: rgba(0,0,0,0.2); color:var(--text-light); outline:none; font-size: 1rem;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.3);
+    }
+    textarea{min-height:100px; resize:vertical}
+
+    .q-area{margin-top:24px}
+    .question{font-weight:600;font-size:1.25rem;margin-bottom:16px}
+    .options{display:flex;flex-direction:column;gap:12px}
+    .opt{
+      padding:14px;border-radius:12px;background:rgba(255,255,255,0.05);cursor:pointer;
+      border:1px solid transparent; transition: all 0.2s ease;
+    }
+    .opt:hover{transform:translateX(5px); background:rgba(255,255,255,0.1); border-color: var(--card-border);}
+    .opt.selected{ background:linear-gradient(90deg, var(--primary), var(--secondary)); color:var(--bg1); border-color: transparent; transform:scale(1.02); font-weight: 600; }
+
+    .controls{display:flex;justify-content:space-between;align-items:center;margin-top:20px;gap:12px}
+    .progress{height:10px;background:rgba(255,255,255,0.1);border-radius:8px;overflow:hidden;margin-top:16px}
+    .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg, var(--primary), var(--secondary));transition:width .25s}
+
+    .media-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+    .media{background:rgba(0,0,0,0.2);padding:12px;border-radius:12px;display:flex;gap:16px;align-items:center}
+    .media img{width:100px;height:64px;object-fit:cover;border-radius:8px}
+
+    .tips-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+    .tip{background:linear-gradient(135deg, rgba(34,211,238,0.1), rgba(244,114,182,0.1));padding:16px;border-radius:12px;}
+
+    footer{margin-top:48px;text-align:center;padding:24px;color:var(--text-muted); border-top: 1px solid var(--card-border);}
+
+    #sosTop{
+      position:fixed; top:24px; right:24px; z-index:999;
+      background:linear-gradient(90deg,#f87171,#ef4444); color:var(--text-light); font-weight:700;
+    }
+    
+    #breathing-exercise { text-align: center; }
+    .breather-container {
+      position: relative; width: 250px; height: 250px; margin: 20px auto;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .breather-circle {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      opacity: 0.2; position: absolute;
+      transition: transform 4s ease-in-out, opacity 4s ease-in-out;
+    }
+    .breather-text {
+      color: var(--text-light); font-size: 1.5rem;
+      font-weight: 600; z-index: 10;
+    }
+
+    #sosModal {
+        display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
+        z-index: 1500; align-items: center; justify-content: center;
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+    .modal-content {
+        max-width: 520px; background: var(--bg2); padding: 28px; border-radius: 16px;
+        color: var(--text-light); margin: 20px; border: 1px solid var(--card-border);
+        animation: fadeIn 0.3s;
+    }
+
+    .mood-buttons {
+      display: flex; justify-content: space-between; margin-top: 16px;
+    }
+    .mood-btn {
+      background: transparent; border: none; font-size: 2.25rem; 
+      cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease;
+      padding: 8px; border-radius: 50%;
+    }
+    .mood-btn:hover {
+      transform: scale(1.2); background-color: rgba(255, 255, 255, 0.1);
+    }
+    .mood-btn:disabled {
+        filter: grayscale(80%); cursor: not-allowed; transform: scale(1);
+    }
+    #moodLogConfirmation {
+        text-align: center; margin-top: 16px; color: var(--success);
+        font-weight: 600; height: 20px;
+    }
+    
+    iframe {
+        border-radius: 12px;
+        border: none;
+        width: 100%;
+        height: 220px;
+    }
+
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .hero-right{position:relative;top:0; margin-top: 24px;}
+    }
+    @media (max-width:768px){
+      .hero-left h1 { font-size: 2rem; }
+      nav { justify-content: center; }
+      header { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="particles" id="particles"></div>
+
+  <button id="sosTop" class="btn" aria-label="SOS" title="Emergency SOS" onclick="openSOSModal()">
+    <i data-lucide="siren"></i>
+    <span>SOS</span>
+  </button>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <i data-lucide="brain-circuit" style="color: var(--bg1);"></i>
+        </div>
+        <div>
+          <div class="title">Atma-Bodha</div>
+          <div class="subtitle">Your Mental Wellness Companion</div>
+        </div>
+      </div>
+      <nav>
+        <button class="btn btn-outline" onclick="scrollToSection('assessment')">Assessment</button>
+        <button class="btn btn-outline" onclick="scrollToSection('exercises-play')">Exercises</button>
+        <button class="btn btn-outline" onclick="scrollToSection('consult')">Consult</button>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-left">
+        <h1 id="hero-title">Your mental health matters.</h1>
+        <p>Take small steps every day. Use our quick self-assessment, guided exercises, and calming resources, built for students.</p>
+
+        <div class="card" style="margin-top: 24px;">
+          <h3><i data-lucide="smile" style="vertical-align: middle; margin-right: 8px;"></i>Quick Mood Log</h3>
+          <p class="muted">How are you feeling right now?</p>
+          <div class="mood-buttons" id="moodButtons">
+            <button class="mood-btn" title="Awesome" onclick="logMood('Awesome')">😄</button>
+            <button class="mood-btn" title="Good" onclick="logMood('Good')">😊</button>
+            <button class="mood-btn" title="Okay" onclick="logMood('Okay')">😐</button>
+            <button class="mood-btn" title="Bad" onclick="logMood('Bad')">😕</button>
+            <button class="mood-btn" title="Terrible" onclick="logMood('Terrible')">😔</button>
+          </div>
+          <div id="moodLogConfirmation"></div>
+        </div>
+
+        <div class="card" style="margin-top:24px;">
+          <h3>Get Started</h3>
+          <form id="startForm" onsubmit="handleStart(event)">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+              <div>
+                <label for="name">Name</label>
+                <input id="name" type="text" placeholder="Your name" required />
+              </div>
+              <div>
+                <label for="age">Age</label>
+                <input id="age" type="number" min="10" max="120" placeholder="e.g. 21" required />
+              </div>
+              <div>
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                  <option value="">Select...</option>
+                  <option>Female</option><option>Male</option><option>Non-binary</option><option>Prefer not to say</option><option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="hero-cta">
+              <button class="btn btn-primary" type="submit"><i data-lucide="play-circle"></i><span>Start Assessment</span></button>
+              <button type="button" class="btn btn-outline" onclick="fillDemoUser()">Autofill</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <aside class="hero-right">
+        <div class="card">
+          <h3>Live Summary</h3>
+          <p class="muted">Severity scores will appear here after the assessment.</p>
+          <div style="margin-top:16px; display: grid; gap: 24px;">
+            <div style="height: 300px;"><canvas id="mainChart" aria-label="Result chart"></canvas></div>
+            <div style="height: 250px;"><canvas id="barChart" aria-label="Result bar chart"></canvas></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="downloadReport()"><i data-lucide="download"></i><span>Save Report</span></button>
+            <button class="btn btn-outline" onclick="showLastResult()"><i data-lucide="history"></i><span>Load Last</span></button>
+          </div>
+        </div>
+      </aside>
+    </section>
+    
+    <section id="breathing-exercise" class="card fade-in-section" style="margin-top: 32px;">
+        <h3>Guided Breathing</h3>
+        <p class="muted">Calm your mind with a simple 1-minute breathing exercise. Follow the guide below.</p>
+        <div class="breather-container">
+            <div class="breather-circle"></div>
+            <div id="breather-text" class="breather-text">Ready?</div>
+        </div>
+        <button id="breathing-start-btn" class="btn btn-primary" onclick="toggleBreathingExercise()">
+            <i data-lucide="wind"></i>
+            <span>Start Exercise</span>
+        </button>
+    </section>
+
+    <section id="assessment" class="card fade-in-section" style="margin-top:32px;">
+      <h3>Self-assessment</h3>
+      <p class="muted">Answer honestly — this is a screening tool, not a diagnosis.</p>
+      <div id="quizWrap" class="q-area">
+        <div id="preQuiz" style="margin-top:14px">
+          <div class="muted">User</div>
+          <div style="margin-top:8px;font-weight:700" id="userPreview">Please fill out the 'Get Started' form first.</div>
+          <div style="margin-top:12px">
+            <button class="btn btn-primary" onclick="startAssessment()"><i data-lucide="clipboard-list"></i><span>Start Questionnaire</span></button>
+          </div>
+        </div>
+        <div id="questionBlock" style="display:none;margin-top:14px">
+          <div class="question" id="qText">Question will appear here</div>
+          <div class="options" id="optionList" role="list"></div>
+          <div class="progress" aria-hidden="true"><i id="progFill" style="width:0%"></i></div>
+          <div class="controls">
+            <div id="qCount">0 / 24</div>
+            <div>
+              <button class="btn btn-outline" id="prevBtn" onclick="goPrev()" style="display:none"><i data-lucide="arrow-left"></i><span>Prev</span></button>
+              <button class="btn btn-primary" id="nextBtn" onclick="skipOrNext()"><span>Next</span><i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div id="resultArea" style="margin-top:16px"></div>
+      </div>
+    </section>
+
+    <section id="exercises-play" class="card fade-in-section" style="margin-top:32px;">
+      <h3><i data-lucide="play-circle"></i> Exercises — Play here</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:16px">
+        <div>
+          <h4 style="margin: 0 0 8px 0;">5-minute Mindfulness</h4>
+          <iframe src="https://www.youtube.com/embed/ZToicYcHIOU" title="5 min Mindfulness" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div>
+          <h4 style="margin: 0 0 8px 0;">Guided Breathing</h4>
+          <iframe src="https://www.youtube.com/embed/inpok4MKVLM" title="Guided Breathing" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div>
+          <h4 style="margin: 0 0 8px 0;">Quick Stretch</h4>
+          <iframe src="https://www.youtube.com/embed/UBMk30rjy0o" title="Quick Stretch" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section class="fade-in-section" style="margin-top: 32px;">
+        <div class="features">
+            <div class="card">
+              <h3><i data-lucide="book-check"></i> Progress & Journal</h3>
+              <p class="muted">Track mood and store short journals to see trends.</p>
+              <div style="margin-top:16px">
+                <label for="mood">Today's mood (1-5)</label>
+                <select id="mood">
+                  <option value="5">5 — Great</option>
+                  <option value="4">4 — Good</option>
+                  <option value="3">3 — Okay</option>
+                  <option value="2">2 — Low</option>
+                  <option value="1">1 — Very low</option>
+                </select>
+                <label for="journal" style="margin-top: 12px;">Short journal entry</label>
+                <textarea id="journal" placeholder="One sentence about how you feel today..."></textarea>
+                <div style="display:flex;gap:8px; margin-top: 12px;">
+                  <button class="btn btn-primary" onclick="saveJournal()">Save Journal</button>
+                  <button class="btn btn-outline" onclick="showJournalHistory()">History</button>
+                </div>
+                <div id="journalMsg" style="margin-top:12px;color:var(--success); font-weight: 500;"></div>
+              </div>
+            </div>
+            
+            <div class="card">
+              <h3><i data-lucide="music"></i> Calm Music</h3>
+              <p class="muted">Lo-fi, calm focus tracks, and chill mixes.</p>
+              <div class="media-grid">
+                 <div class="media">
+                  <img src="https://img.youtube.com/vi/jfKfPfyJRdk/hqdefault.jpg" alt="lofi">
+                  <div>
+                    <div style="font-weight:700">Lofi Hip Hop Radio</div>
+                    <button class="btn btn-outline" style="margin-top: 8px;" onclick="openVideo('https://www.youtube.com/watch?v=jfKfPfyJRdk')">Listen</button>
+                  </div>
+                </div>
+                 <div class="media">
+                  <img src="https://img.youtube.com/vi/t8yVk0bm684/hqdefault.jpg" alt="Bollywood">
+                  <div>
+                    <div style="font-weight:700">Bollywood Lo-fi</div>
+                    <button class="btn btn-outline" style="margin-top: 8px;" onclick="openVideo('https://www.youtube.com/watch?v=t8yVk0bm684')">Listen</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3><i data-lucide="lightbulb"></i> Daily Tips</h3>
+              <p class="muted">Small habits that make a big difference.</p>
+              <div class="tips-grid">
+                <div class="tip"><strong>Exercise:</strong> A 5-minute mobility routine after waking up.</div>
+                <div class="tip"><strong>Diet:</strong> Hydrate with 2–3L of water daily. Breakfast with protein.</div>
+                <div class="tip"><strong>Connect:</strong> Reach out to one friend or family member each day.</div>
+              </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="consult" class="card fade-in-section" style="margin-top:32px;">
+      <h3><i data-lucide="message-square-heart"></i> Consult a Psychologist</h3>
+      <p class="muted">We'll forward your request to partnered counselors (this is a demo feature).</p>
+      <form id="consultForm" style="margin-top:16px" onsubmit="submitConsult(event)">
+        <label for="cname">Name</label>
+        <input id="cname" type="text" placeholder="Your name" required />
+        <label for="cemail" style="margin-top:12px">Email</label>
+        <input id="cemail" type="email" placeholder="you@example.com" required />
+        <label for="cwhen" style="margin-top:12px">Preferred time (optional)</label>
+        <input id="cwhen" type="text" placeholder="e.g., Weekdays 6–8 PM" />
+        <label for="cmsg" style="margin-top:12px">Brief concern</label>
+        <textarea id="cmsg" placeholder="Describe briefly what's on your mind..." required></textarea>
+        <div style="display:flex;gap:12px; margin-top: 16px;">
+          <button class="btn btn-primary" type="submit"><i data-lucide="send"></i><span>Request Consult</span></button>
+          <button class="btn btn-outline" type="button" onclick="fillConsultDemo()">Autofill Demo</button>
+        </div>
+      </form>
+      <div id="consultMsg" style="margin-top:16px; color: var(--success); font-weight: 500;"></div>
+    </section>
+
+    <footer>
+      © 2025 Atma-Bodha — This is a prototype and not a substitute for professional medical advice. If you're in immediate danger, call your local emergency services.
+    </footer>
+  </div>
+
+  <div id="sosModal" onclick="closeSOSModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3>Emergency Options</h3>
+      <p class="muted">If you're in immediate danger, call your local emergency number first. Here are some other helplines:</p>
+      <ul style="line-height:1.8;margin-top:12px; padding-left: 20px;">
+        <li>India — NIMHANS Helpline: <strong>080 4611 0007</strong></li>
+        <li>US — Suicide & Crisis Lifeline: <strong>988</strong></li>
+        <li>UK — Samaritans: <strong>116 123</strong></li>
+      </ul>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:20px">
+        <button class="btn btn-outline" onclick="closeSOSModal()">Close</button>
+        <button class="btn btn-primary" style="background: var(--danger);" onclick="window.open('tel:988')">Call 988</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const QUESTIONS = [
+  {q:"In the past 2 weeks, how often have you felt little interest or pleasure in doing things?", cat:"Depression"},
+  {q:"How often have you felt down, depressed, or hopeless?", cat:"Depression"},
+  {q:"Do you find it difficult to concentrate on your studies?", cat:"Depression"},
+  {q:"Have you felt tired or had little energy?", cat:"Depression"},
+  {q:"Do you feel you have lost interest in hobbies or friends?", cat:"Depression"},
+  {q:"Do you feel hopeless about the future?", cat:"Depression"}, {q:"How often do you feel nervous, anxious, or on edge?", cat:"Anxiety"},
+  {q:"Do you experience sudden feelings of panic or fear?", cat:"Anxiety"}, {q:"Do you have physical symptoms like fast heartbeat or sweating during worry?", cat:"Anxiety"},
+  {q:"How often are you unable to control worrying once it starts?", cat:"Anxiety"}, {q:"Does worry interfere with your studies or sleep?", cat:"Anxiety"},
+  {q:"How often do you feel overwhelmed by academic responsibilities?", cat:"Stress"}, {q:"Do you get irritated or lose temper easily over small things?", cat:"Stress"},
+  {q:"Do you find it difficult to relax after a busy day?", cat:"Stress"}, {q:"Do you feel regularly pressured to meet expectations?", cat:"Stress"},
+  {q:"How often do you feel mentally exhausted at the end of the day?", cat:"Stress"}, {q:"Do you have trouble falling asleep even when tired?", cat:"Sleep"},
+  {q:"How often do you wake up during the night or too early in the morning?", cat:"Sleep"}, {q:"Do you feel refreshed when you wake up?", cat:"SleepReverse"},
+  {q:"Do you nap frequently during the day because you are not rested?", cat:"Sleep"}, {q:"How often do you feel angry or easily annoyed?", cat:"Anger"},
+  {q:"Do you have urges to shout or break things when upset?", cat:"Anger"}, {q:"Do you find it difficult to control angry reactions?", cat:"Anger"}
+];
+const OPTIONS = [ {text:"Not at all", val:0}, {text:"Several days", val:1}, {text:"More than half the days", val:2}, {text:"Nearly every day", val:3} ];
+let currentIndex = 0;
+let answers = Array(QUESTIONS.length).fill(null);
+const categories = ["Depression","Anxiety","Stress","Sleep","Anger"];
+let categoryScores = { Depression:0, Anxiety:0, Stress:0, Sleep:0, Anger:0 };
+
+const qText = document.getElementById('qText');
+const optionList = document.getElementById('optionList');
+const progFill = document.getElementById('progFill');
+const qCount = document.getElementById('qCount');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const questionBlock = document.getElementById('questionBlock');
+const preQuiz = document.getElementById('preQuiz');
+const resultArea = document.getElementById('resultArea');
+const userPreview = document.getElementById('userPreview');
+const mainChartCtx = document.getElementById('mainChart').getContext('2d');
+const barChartCtx = document.getElementById('barChart').getContext('2d');
+let mainChart; let barChart;
+
+function initializeChart() {
+    if (mainChart) mainChart.destroy();
+    mainChart = new Chart(mainChartCtx, {
+      type:'radar', data:{ labels: categories, datasets:[{ label:'% Severity', data:[0,0,0,0,0], backgroundColor: 'rgba(34, 211, 238, 0.2)', borderColor: 'rgba(34, 211, 238, 1)', pointBackgroundColor: 'rgba(34, 211, 238, 1)', pointBorderColor: '#fff', }] },
+      options:{ responsive:true, maintainAspectRatio:false, scales: { r: { beginAtZero: true, max: 100, angleLines: { color: 'rgba(255, 255, 255, 0.2)' }, grid: { color: 'rgba(255, 255, 255, 0.2)' }, pointLabels: { color: 'var(--text-light)', font: { size: 14 } }, ticks: { color: 'var(--text-light)', backdropColor: 'transparent', stepSize: 25 } } }, plugins:{ legend:{ display:false } } }
+    });
+}
+function initializeBarChart() {
+    if (barChart) barChart.destroy();
+    barChart = new Chart(barChartCtx, {
+      type:'bar', data:{ labels: categories, datasets:[{ label:'% Severity', data:[0,0,0,0,0], backgroundColor: [ 'rgba(244, 114, 182, 0.6)', 'rgba(234, 179, 8, 0.6)', 'rgba(79, 70, 229, 0.6)', 'rgba(34, 211, 238, 0.6)', 'rgba(139, 92, 246, 0.6)' ], borderColor: [ '#f472b6', '#eab308', '#4f46e5', '#22d3ee', '#8b5cf6' ], borderWidth: 2, }] },
+      options:{ responsive:true, maintainAspectRatio:false, scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255, 255, 255, 0.2)' }, ticks: { color: '#f8fafc', stepSize: 25 } }, x: { grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#f8fafc' } } }, plugins:{ legend:{ display:false } } }
+    });
+}
+
+function resetCharts() {
+    const initialData = [0, 0, 0, 0, 0];
+    if (mainChart) {
+        mainChart.data.datasets[0].data = initialData;
+        mainChart.update();
+    }
+    if (barChart) {
+        barChart.data.datasets[0].data = initialData;
+        barChart.update();
+    }
+}
+
+function scrollToSection(id){ document.getElementById(id)?.scrollIntoView(); }
+function handleStart(e){
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const age = document.getElementById('age').value.trim();
+  const gender = document.getElementById('gender').value;
+  if(!name || !age || !gender){ alert('Please fill name, age and gender to continue.'); return; }
+  
+  userPreview.innerHTML = `Welcome, <strong>${name}</strong>! (${age}, ${gender}). Ready for your assessment.`;
+  document.getElementById('hero-title').innerHTML = `Welcome, ${name}.<br/>Your mental health matters.`;
+  
+  localStorage.setItem('atmabodha_user', JSON.stringify({ name, age, gender }));
+
+  resultArea.innerHTML = ''; 
+  questionBlock.style.display = 'none'; 
+  preQuiz.style.display = 'block'; 
+  resetCharts(); 
+
+  scrollToSection('assessment');
+}
+function fillDemoUser(){
+  document.getElementById('name').value = "Alex Student";
+  document.getElementById('age').value = "21";
+  document.getElementById('gender').value = "Female";
+}
+function startAssessment(){
+  if(!localStorage.getItem('atmabodha_user')){ alert('Please enter your details in the "Get Started" form first.'); scrollToSection('startForm'); return; }
+  answers = Array(QUESTIONS.length).fill(null);
+  currentIndex = 0; resultArea.innerHTML = '';
+  preQuiz.style.display = 'none'; questionBlock.style.display = 'block';
+  renderQuestion(0);
+}
+function renderQuestion(index){
+  currentIndex = index; const item = QUESTIONS[index];
+  qText.innerText = item.q; optionList.innerHTML = '';
+  OPTIONS.forEach((opt, i)=>{
+    const d = document.createElement('div');
+    d.className = 'opt'; d.role = 'button'; d.tabIndex = 0; d.innerText = opt.text;
+    if(answers[index] === opt.val) d.classList.add('selected');
+    d.onclick = ()=> selectOption(i);
+    d.onkeydown = (e)=> { if(e.key === 'Enter') selectOption(i); };
+    optionList.appendChild(d);
+  });
+  const pct = Math.round(((index)/QUESTIONS.length)*100);
+  progFill.style.width = pct + '%'; qCount.innerText = `${index+1} / ${QUESTIONS.length}`;
+  prevBtn.style.display = index > 0 ? 'inline-flex' : 'none';
+  nextBtn.innerHTML = index === QUESTIONS.length - 1 ? `<span>Finish</span><i data-lucide="check-circle"></i>` : `<span>Next</span><i data-lucide="arrow-right"></i>`;
+  lucide.createIcons();
+}
+function selectOption(optIndex){
+  answers[currentIndex] = OPTIONS[optIndex].val;
+  [...optionList.children].forEach((n, idx) => n.classList.toggle('selected', idx === optIndex));
+  setTimeout(()=> {
+    if(currentIndex < QUESTIONS.length - 1) { renderQuestion(currentIndex + 1); }
+    else { computeAndShowResults(); }
+  }, 260);
+}
+function goPrev(){ if(currentIndex>0) renderQuestion(currentIndex - 1); }
+function skipOrNext(){
+  if(answers[currentIndex] === null) answers[currentIndex] = 0;
+  if(currentIndex < QUESTIONS.length - 1) renderQuestion(currentIndex + 1);
+  else computeAndShowResults();
+}
+function computeAndShowResults(){
+  categoryScores = { Depression:0, Anxiety:0, Stress:0, Sleep:0, Anger:0 };
+  for(let i=0;i<QUESTIONS.length;i++){
+    let val = answers[i] || 0; const q = QUESTIONS[i];
+    if(q.cat === "SleepReverse"){ val = 3 - val; categoryScores["Sleep"] += val; } 
+    else { categoryScores[q.cat] += val; }
+  }
+  const catCounts = QUESTIONS.reduce((acc,q)=>{ let key = q.cat === "SleepReverse" ? "Sleep" : q.cat; acc[key] = (acc[key]||0) + 1; return acc; }, {});
+  const catMax = {};
+  for(const c of Object.keys(catCounts)) catMax[c] = catCounts[c] * 3;
+  const percentages = {};
+  for(const c of categories) percentages[c] = Math.round(((categoryScores[c] || 0) / (catMax[c] || 1)) * 100);
+  updateMainChart(percentages);
+  const overall = Math.round((percentages.Depression + percentages.Anxiety + percentages.Stress) / 3);
+  const recs = categories.map(c => { const p = percentages[c]; let level = p <= 25 ? "Minimal" : p <= 50 ? "Mild" : p <= 75 ? "Moderate" : "Severe"; return `<div><strong>${c}:</strong> ${p}% (${level})</div>`; }).join('');
+  const alertHtml = overall >= 76 ? `<div style="margin-top:12px;padding:12px;border-radius:10px;background:rgba(248, 113, 113, 0.2); color:var(--danger);font-weight:600">High severity score detected (${overall}%). Please consider using the consult form below.</div>` : '';
+  resultArea.innerHTML = `<div class="card" style="background: linear-gradient(135deg, rgba(34,211,238,0.1), rgba(244,114,182,0.1));"><h3 style="font-size:1.25rem">Assessment Summary</h3><div style="margin-top:12px;line-height:1.8; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">${recs}</div>${alertHtml}</div>`;
+  questionBlock.style.display = 'none';
+  const saved = { timestamp: new Date().toISOString(), user: JSON.parse(localStorage.getItem('atmabodha_user')), answers, categoryScores, percentages, overall };
+  localStorage.setItem('atmabodha_last_result', JSON.stringify(saved));
+  scrollToSection('mainChart');
+}
+function updateMainChart(percentages){
+  const dataArr = categories.map(c => percentages[c] || 0);
+  mainChart.data.datasets[0].data = dataArr; mainChart.update();
+  barChart.data.datasets[0].data = dataArr; barChart.update();
+}
+function downloadReport(){
+  const last = localStorage.getItem('atmabodha_last_result');
+  if(!last){ alert('No result found. Complete the assessment first.'); return; }
+  const blob = new Blob([last], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'atmabodha-assessment.json';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function showLastResult(){
+  const last = localStorage.getItem('atmabodha_last_result');
+  if(!last){ alert('No saved result. Complete an assessment first.'); return; }
+  const parsed = JSON.parse(last);
+  if(parsed.percentages){ updateMainChart(parsed.percentages); alert('Loaded your last saved result onto the chart.'); }
+}
+function openVideo(url){ window.open(url, '_blank'); }
+function openSOSModal(){ document.getElementById('sosModal').style.display='flex'; }
+function closeSOSModal(){ document.getElementById('sosModal').style.display='none'; }
+function logMood(mood) {
+    const moodLogs = JSON.parse(localStorage.getItem('atmabodha_mood_logs') || '[]');
+    moodLogs.push({ mood: mood, timestamp: new Date().toISOString() });
+    localStorage.setItem('atmabodha_mood_logs', JSON.stringify(moodLogs));
+    const confirmationDiv = document.getElementById('moodLogConfirmation');
+    confirmationDiv.innerText = `Logged as "${mood}"!`;
+    const moodButtons = document.querySelectorAll('.mood-btn');
+    moodButtons.forEach(btn => btn.disabled = true);
+    setTimeout(() => { confirmationDiv.innerText = ''; moodButtons.forEach(btn => btn.disabled = false); }, 3000);
+}
+const breatherText = document.getElementById('breather-text');
+const breatherCircle = document.querySelector('.breather-circle');
+const breathingStartBtn = document.getElementById('breathing-start-btn');
+let breathingInterval; let isBreathing = false;
+function toggleBreathingExercise() { if (isBreathing) { stopBreathingExercise(); } else { startBreathingExercise(); } }
+function startBreathingExercise() {
+    isBreathing = true;
+    breathingStartBtn.innerHTML = `<i data-lucide="square"></i><span>Stop Exercise</span>`;
+    lucide.createIcons(); clearInterval(breathingInterval);
+    breathingStartBtn.disabled = true; setTimeout(() => { breathingStartBtn.disabled = false; }, 1000);
+    const cycle = () => {
+        breatherText.textContent = 'Breathe In...'; breatherCircle.style.transform = 'scale(1)';
+        setTimeout(() => {
+            breatherText.textContent = 'Hold...';
+            setTimeout(() => {
+                breatherText.textContent = 'Breathe Out...'; breatherCircle.style.transform = 'scale(0.5)';
+            }, 2000);
+        }, 4000);
+    };
+    cycle(); breathingInterval = setInterval(cycle, 10000);
+}
+function stopBreathingExercise() {
+    isBreathing = false; clearInterval(breathingInterval);
+    breatherText.textContent = 'Ready?'; breatherCircle.style.transform = 'scale(1)';
+    breathingStartBtn.innerHTML = `<i data-lucide="wind"></i><span>Start Exercise</span>`;
+    lucide.createIcons();
+}
+function saveJournal(){
+  const mood = document.getElementById('mood').value;
+  const text = document.getElementById('journal').value.trim();
+  const entries = JSON.parse(localStorage.getItem('atmabodha_journal') || '[]');
+  entries.unshift({ timestamp: new Date().toISOString(), mood, text });
+  localStorage.setItem('atmabodha_journal', JSON.stringify(entries.slice(0,200)));
+  const msgDiv = document.getElementById('journalMsg');
+  msgDiv.innerText = 'Saved ✓';
+  setTimeout(()=> msgDiv.innerText = '', 2500);
+  document.getElementById('journal').value = '';
+}
+function showJournalHistory(){
+  const entries = JSON.parse(localStorage.getItem('atmabodha_journal') || '[]');
+  if(!entries.length) return alert('No journal entries yet.');
+  let html = 'Recent entries:\n\n';
+  entries.slice(0,10).forEach(e => {
+    html += `${new Date(e.timestamp).toLocaleString()} — Mood ${e.mood}/5\n${e.text}\n\n`;
+  });
+  alert(html);
+}
+function fillConsultDemo(){
+  document.getElementById('cname').value = 'Alex Student';
+  document.getElementById('cemail').value = 'alex@example.com';
+  document.getElementById('cwhen').value = 'Weekdays 6–8 PM';
+  document.getElementById('cmsg').value = 'I have been feeling anxious about exams and my sleep has been poor.';
+}
+function submitConsult(e){
+  e.preventDefault();
+  const name = document.getElementById('cname').value.trim();
+  const email = document.getElementById('cemail').value.trim();
+  const msg = document.getElementById('cmsg').value.trim();
+  if(!name || !email || !msg) { alert('Please fill name, email and a short message.'); return; }
+  const msgDiv = document.getElementById('consultMsg');
+  msgDiv.innerText = 'Thanks — your request was recorded (demo). We will email you.';
+  document.getElementById('consultForm').reset();
+  setTimeout(()=> msgDiv.innerText = '', 4000);
+}
+function initParticles() {
+  const particlesContainer = document.getElementById('particles');
+  if (!particlesContainer) return; const particleCount = 50;
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.classList.add('particle');
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 6 + 's';
+    particle.style.animationDuration = (Math.random() * 4 + 5) + 's';
+    particlesContainer.appendChild(particle);
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+    initParticles(); initializeChart(); initializeBarChart();
+    lucide.createIcons();
+    const sections = document.querySelectorAll('.fade-in-section');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                entry.target.style.animation = 'fadeIn 0.8s forwards';
+            }
+        });
+    }, { threshold: 0.1 });
+    sections.forEach(section => observer.observe(section));
+});
+</script>
+</body>
+</html>
+
